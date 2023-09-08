@@ -5,6 +5,10 @@ import pytz
 
 app = Flask(__name__)
 
+@app.route('/')
+def hello():
+    return 'hello'
+
 @app.route('/api', methods=['GET'])
 def get_info():
     # Get query parameters
@@ -37,5 +41,4 @@ def get_info():
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, port=port)
+    app.run()

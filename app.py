@@ -1,5 +1,4 @@
 import os  # Import the os module
-
 from flask import Flask, request, jsonify
 import datetime
 import pytz
@@ -39,4 +38,4 @@ def get_info():
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True, port=port)

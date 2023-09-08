@@ -1,3 +1,5 @@
+import os  # Import the os module
+
 from flask import Flask, request, jsonify
 import datetime
 import pytz
@@ -18,8 +20,8 @@ def get_info():
     current_time_str = current_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # Construct GitHub URLs
-    github_repo_url = "https://github.com/Meggison/stage-one-api/"
-    github_file_url = github_repo_url + "https://github.com/Meggison/stage-one-api/blob/main/endpoint.ext"
+    github_repo_url = "https://github.com/username/repo"
+    github_file_url = github_repo_url + "/blob/main/file_name.ext"
 
     # Prepare JSON response
     response = {
@@ -35,4 +37,6 @@ def get_info():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    # Use the PORT environment variable provided by Heroku
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

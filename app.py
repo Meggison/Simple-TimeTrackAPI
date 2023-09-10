@@ -11,10 +11,9 @@ port = int(os.environ.get("PORT", 5000))
 
 def get_current_utc_time():
     current_time = datetime.datetime.utcnow()
-    # Generate a random time interval within +/-2 minutes (120 seconds)
-    random_seconds = random.randint(-120, 120)
-    adjusted_time = current_time + datetime.timedelta(seconds=random_seconds)
-    return adjusted_time
+    # Format the UTC time with the desired format
+    current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+    return current_time_str
 
 @app.route('/')
 def hello():
@@ -30,8 +29,7 @@ def get_info():
     current_day = datetime.datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern')).strftime("%A")
 
     # Get current UTC time with validation of +/-2 minutes
-    current_time = get_current_utc_time()
-    current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+    current_time_str = get_current_utc_time()
 
     # Construct GitHub URLs
     github_repo_url = "https://github.com/username/repo"

@@ -9,11 +9,11 @@ app = Flask(__name__)
 # Get the port from the environment variable or use 5000 as a default
 port = int(os.environ.get("PORT", 5000))
 
-def get_current_utc_time():
-    current_time = datetime.datetime.utcnow()
+#def get_current_utc_time():
+ #   current_time = datetime.datetime.utcnow()
     # Format the UTC time with the desired format
-    current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
-    return current_time_str
+  #  current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+   # return current_time_str
 
 @app.route('/')
 def hello():
@@ -29,7 +29,7 @@ def get_info():
     current_day = datetime.datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern')).strftime("%A")
 
     # Get current UTC time with validation of +/-2 minutes
-    current_time_str = get_current_utc_time()
+    current_utc_time_str = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     # Construct GitHub URLs
     github_repo_url = "https://github.com/username/repo"

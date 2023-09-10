@@ -1,8 +1,8 @@
 import os
 from flask import Flask, request, jsonify
 import datetime
-import pytz
 import random
+import pytz
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ app = Flask(__name__)
 port = int(os.environ.get("PORT", 5000))
 
 def get_current_utc_time():
-    current_time = datetime.datetime.utcnow()
+    current_time = datetime.datetime.now(pytz.UTC)
     # Generate a random time interval within +/-2 minutes (120 seconds)
     random_seconds = random.randint(-120, 120)
     adjusted_time = current_time + datetime.timedelta(seconds=random_seconds)
@@ -27,12 +27,11 @@ def get_info():
     track = request.args.get('track')
 
     # Get current day of the week
-    current_day = datetime.datetime.utcnow().strftime('%A')
+    current_day = datetime.datetime.now(pytz.UTC).strftime('%A')
 
     # Get current UTC time with validation of +/-2 minutes
     current_time = get_current_utc_time()
-    current_time_str =  current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
-
+    current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
 
     # Construct GitHub URLs
     github_repo_url = "https://github.com/username/repo"

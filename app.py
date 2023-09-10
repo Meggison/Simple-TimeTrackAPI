@@ -6,6 +6,9 @@ import random
 
 app = Flask(__name__)
 
+# Get the port from the environment variable or use 5000 as a default
+port = int(os.environ.get("PORT", 5000))
+
 def get_current_utc_time():
     current_time = datetime.datetime.utcnow()
     # Generate a random time interval within +/-2 minutes (120 seconds)
@@ -50,4 +53,4 @@ def get_info():
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=port)

@@ -1,9 +1,17 @@
-import os  # Import the os module
+import os
 from flask import Flask, request, jsonify
 import datetime
 import pytz
+import random
 
 app = Flask(__name__)
+
+def get_current_utc_time():
+    current_time = datetime.datetime.utcnow()
+    # Generate a random time interval within +/-2 minutes (120 seconds)
+    random_seconds = random.randint(-120, 120)
+    adjusted_time = current_time + datetime.timedelta(seconds=random_seconds)
+    return adjusted_time
 
 @app.route('/')
 def hello():
@@ -19,8 +27,9 @@ def get_info():
     current_day = datetime.datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern')).strftime("%A")
 
     # Get current UTC time with validation of +/-2 minutes
-    current_time = datetime.datetime.now(pytz.utc)
-    current_time_str = current_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    current_time = get_current_utc_time()
+    current_time_str =  current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+
 
     # Construct GitHub URLs
     github_repo_url = "https://github.com/username/repo"
@@ -41,4 +50,4 @@ def get_info():
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku
-    app.run()
+    app.run(debug=True)

@@ -29,7 +29,7 @@ def get_info():
     current_day = datetime.datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern')).strftime("%A")
 
     # Get current UTC time with validation of +/-2 minutes
-    current_utc_time_str = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    current_time_str = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     # Construct GitHub URLs
     github_repo_url = "https://github.com/username/repo"

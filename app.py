@@ -27,7 +27,7 @@ def get_info():
     track = request.args.get('track')
 
     # Get current day of the week
-    current_day = datetime.datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern')).strftime("%A")
+    current_day = datetime.datetime.utcnow().strftime('%A')
 
     # Get current UTC time with validation of +/-2 minutes
     current_time = get_current_utc_time()

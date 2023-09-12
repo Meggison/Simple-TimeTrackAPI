@@ -3,21 +3,25 @@ from flask import Flask, request, jsonify
 import datetime
 import random
 import pytz
-
-persons = {}
-person_id_counter = 1
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///persons.db'  # SQLite database file
+db = SQLAlchemy(app)
 
 # Get the port from the environment variable or use 5000 as a default
 port = int(os.environ.get("PORT", 5000))
 
-#def get_current_utc_time():
- #   current_time = datetime.datetime.utcnow()
-    # Format the UTC time with the desired format
-  #  current_time_str = current_time.strftime('%Y-%m-%dT%H:%M:%SZ')
-   # return current_time_str
+# Define Person model
+class Person(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    age = db.Column(db.Integer, nullable=True)
+    email = db.Column(db.String(100), nullable=True)
+
+# Create the database tables
+db.create_all()
 
 @app.route('/')
 def hello():
@@ -51,39 +55,51 @@ def get_info():
     }
 
     return jsonify(response)
+
 # CREATE a new person
 @app.route('/api/persons', methods=['POST'])
 def create_person():
-    global person_id_counter
     data = request.get_json()
-    person_id = person_id_counter
-    persons[person_id] = data
-    person_id_counter += 1
-    return jsonify({'person_id': person_id}), 201
+    new_person = Person(name=data['name'], age=data['age'], email=data['email'])
+    db.session.add(new_person)
+    db.session.commit()
+    return jsonify({'person_id': new_person.id}), 201
 
 # READ a person by ID
 @app.route('/api/persons/<int:person_id>', methods=['GET'])
 def get_person(person_id):
-    person = persons.get(person_id)
+    person = Person.query.get(person_id)
     if person is None:
         return jsonify({'message': 'Person not found'}), 404
-    return jsonify(person)
+    return jsonify({
+        'id': person.id,
+        'name': person.name,
+        'age': person.age,
+        'email': person.email
+    })
 
 # UPDATE a person by ID
 @app.route('/api/persons/<int:person_id>', methods=['PUT'])
 def update_person(person_id):
     data = request.get_json()
-    if person_id not in persons:
+    person = Person.query.get(person_id)
+    if person is None:
         return jsonify({'message': 'Person not found'}), 404
-    persons[person_id] = data
+    person.name = data['name']
+    person.age = data['age']
+    person.email = data['email']
+    db.session.commit()
     return jsonify({'message': 'Person updated'})
+
 
 # DELETE a person by ID
 @app.route('/api/persons/<int:person_id>', methods=['DELETE'])
 def delete_person(person_id):
-    if person_id not in persons:
+    person = Person.query.get(person_id)
+    if person is None:
         return jsonify({'message': 'Person not found'}), 404
-    del persons[person_id]
+    db.session.delete(person)
+    db.session.commit()
     return jsonify({'message': 'Person deleted'})
 
 

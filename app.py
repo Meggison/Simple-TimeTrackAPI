@@ -4,6 +4,10 @@ import datetime
 import random
 import pytz
 
+persons = {}
+person_id_counter = 1
+
+
 app = Flask(__name__)
 
 # Get the port from the environment variable or use 5000 as a default
@@ -47,6 +51,41 @@ def get_info():
     }
 
     return jsonify(response)
+# CREATE a new person
+@app.route('/api/persons', methods=['POST'])
+def create_person():
+    global person_id_counter
+    data = request.get_json()
+    person_id = person_id_counter
+    persons[person_id] = data
+    person_id_counter += 1
+    return jsonify({'person_id': person_id}), 201
+
+# READ a person by ID
+@app.route('/api/persons/<int:person_id>', methods=['GET'])
+def get_person(person_id):
+    person = persons.get(person_id)
+    if person is None:
+        return jsonify({'message': 'Person not found'}), 404
+    return jsonify(person)
+
+# UPDATE a person by ID
+@app.route('/api/persons/<int:person_id>', methods=['PUT'])
+def update_person(person_id):
+    data = request.get_json()
+    if person_id not in persons:
+        return jsonify({'message': 'Person not found'}), 404
+    persons[person_id] = data
+    return jsonify({'message': 'Person updated'})
+
+# DELETE a person by ID
+@app.route('/api/persons/<int:person_id>', methods=['DELETE'])
+def delete_person(person_id):
+    if person_id not in persons:
+        return jsonify({'message': 'Person not found'}), 404
+    del persons[person_id]
+    return jsonify({'message': 'Person deleted'})
+
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku

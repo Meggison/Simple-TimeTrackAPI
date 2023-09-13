@@ -1,13 +1,14 @@
 import os
 from flask import Flask, request, jsonify
 import datetime
-import random
 import pytz
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('postgres://ivhfdisaapirgd:65fb77e5489d510ddb43657b978a4356dfb73ce0131c9ef0693362c5e170132a@ec2-52-0-79-72.compute-1.amazonaws.com:5432/dfadpvek5s2jkd')
+
+# Set the Postgres database URL directly here
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ivhfdisaapirgd:65fb77e5489d510ddb43657b978a4356dfb73ce0131c9ef0693362c5e170132a@ec2-52-0-79-72.compute-1.amazonaws.com:5432/dfadpvek5s2jkd'
+
 db = SQLAlchemy(app)
 
 # Get the port from the environment variable or use 5000 as a default

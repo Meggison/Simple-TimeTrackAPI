@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///persons.db'  # SQLite database file
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('postgres://ivhfdisaapirgd:65fb77e5489d510ddb43657b978a4356dfb73ce0131c9ef0693362c5e170132a@ec2-52-0-79-72.compute-1.amazonaws.com:5432/dfadpvek5s2jkd')
 db = SQLAlchemy(app)
 
 # Get the port from the environment variable or use 5000 as a default
@@ -21,7 +21,10 @@ class Person(db.Model):
     email = db.Column(db.String(100), nullable=True)
 
 # Create the database tables
-db.create_all()
+def create_tables():
+    with app.app_context():
+        db.create_all()
+
 
 @app.route('/')
 def hello():
@@ -105,4 +108,5 @@ def delete_person(person_id):
 
 if __name__ == '__main__':
     # Use the PORT environment variable provided by Heroku
+    create_tables()
     app.run(host="0.0.0.0", port=port)

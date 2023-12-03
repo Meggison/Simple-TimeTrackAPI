@@ -14,7 +14,7 @@ This Flask application provides a simple web server with two endpoints. It demon
 
 1. Clone the repository:
 2. Navigate to the cloned directory and install dependencies:
-pip install Flask pytz
+pip install requirements.txt
 
 ## Usage
 
